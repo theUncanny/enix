@@ -7,7 +7,9 @@ help:
 	@echo "Build targets:"
 	@echo "  all      Run lint fmt build."
 	@echo "  build    Build binary."
+	@echo "  build-static    Build static linked binary."
 	@echo "  debug    Build binary for debugging."
+	@echo "  debug-static    Build static linked binary for debugging."
 	@echo "  default  Run build."
 	@echo "Installation targets:"
 	@echo "  install-bin    Install enix binary to /usr/local/bin/ directory."
@@ -35,8 +37,14 @@ all: lint fmt build
 build:
 	go build -v -o $(NAME) ./cmd/$(NAME)
 
+build-static:
+	CGO_ENABLED=0 go build -v -a -ldflags '-extldflags "-static"' -o $(NAME) ./cmd/$(NAME)
+
 debug:
 	go build -v -gcflags=all="-N -l" -o $(NAME) ./cmd/$(NAME)
+
+debug-static:
+	CGO_ENABLED=0 go build -v -a -gcflags=all="-N -l -ldflags '-extldflags "-static"' -o $(NAME) ./cmd/$(NAME)
 
 # Installation targets
 
